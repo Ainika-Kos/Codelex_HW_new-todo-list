@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import './App.css';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { v4 as uuidv4 } from 'uuid';
 import { Task, TaskType } from './components/task/task';
+
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-type KeysToChange = {
-  name?: string;
-  finished?: boolean;
-  edit?: boolean;
-  editValue?: string;
-};
+// type KeysToChange = {
+//   name?: string;
+//   finished?: boolean;
+//   edit?: boolean;
+//   editValue?: string;
+// };
 
-const changeArrProperties = (
+const changeArrProperties = <T extends {[key: string]: unknown}> (
   arr: { [key: string]: unknown }[],
   index: number,
-  keysToChange: KeysToChange
+  keysToChange: T
 ) => {
   const newArr = [...arr];
 
@@ -43,6 +45,7 @@ const TodoApp = () => {
       setTasks([
         ...tasks,
         {
+          id: uuidv4(),
           name: inputTask,
           finished: false,
           edit: false,
@@ -54,7 +57,8 @@ const TodoApp = () => {
     }
   };
 
-  const finishedChangeHandler = (index: number) => {
+  const finishedChangeHandler = (id: string) => {
+    const index = tasks.findIndex((item) => item.id === id);
     const transformedArr = changeArrProperties(tasks, index, {
       finished: !tasks[index].finished
     }) as TaskType[];
@@ -62,40 +66,49 @@ const TodoApp = () => {
     setTasks(transformedArr);
   };
 
-  const editHandler = (index: number) => {
+  const editHandler = (id: string) => {
+    const index = tasks.findIndex((item) => item.id === id);
     newTasks[index].edit = !newTasks[index].edit;
     newTasks[index].editValue = newTasks[index].name;
     setTasks(newTasks);
   };
 
-  const deleteHandler = (index: number) => {
+  const deleteHandler = (id: string) => {
+    const index = tasks.findIndex((item) => item.id === id);
     newTasks.splice(index, 1);
     setTasks(newTasks);
   };
 
   const editInputHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    id: string
   ) => {
+    const index = tasks.findIndex((item) => item.id === id);
     newTasks[index].editValue = e.target.value;
     setTasks(newTasks);
   };
 
-  const editCancelHandler = (index: number) => {
+  const editCancelHandler = (id: string) => {
+    const index = tasks.findIndex((item) => item.id === id);
     newTasks[index].edit = false;
     newTasks[index].editValue = '';
     setTasks(newTasks);
   };
 
-  const editSaveHandler = (index: number) => {
+  const editSaveHandler = (id: string) => {
+    const index = tasks.findIndex((item) => item.id === id);
     newTasks[index].edit = false;
     newTasks[index].name = newTasks[index].editValue;
     newTasks[index].editValue = '';
     setTasks(newTasks);
   };
 
-  const copyHandler = (index: number) => {
-    const taskCopy = { ...tasks[index] };
+  const copyHandler = (id: string) => {
+    const index = tasks.findIndex((item) => item.id === id);
+    const taskCopy = { 
+      ...tasks[index],
+      id: uuidv4(),
+    };
 
     setTasks([...tasks, taskCopy]);
   };
@@ -148,24 +161,25 @@ const TodoApp = () => {
             </button>
             <br /><br />
             <div>
-              {filteredArr.map(({ name, finished, edit, editValue }, index) => (
-                <Task
-                  key={`${index + name}`}
-                  name={name}
-                  finished={finished}
-                  edit={edit}
-                  editValue={editValue}
-                  index={index}
-                  finishedChangeHandler={finishedChangeHandler}
-                  editHandler={editHandler}
-                  deleteHandler={deleteHandler}
-                  editInputHandler={editInputHandler}
-                  editCancelHandler={editCancelHandler}
-                  editSaveHandler={editSaveHandler}
-                  copyHandler={copyHandler}
-                />
-
-              ))}
+              {filteredArr.map(({ id, name, finished, edit, editValue }) => {
+                return (
+                  <Task
+                    key={id}
+                    id={id}
+                    name={name}
+                    finished={finished}
+                    edit={edit}
+                    editValue={editValue}
+                    finishedChangeHandler={finishedChangeHandler}
+                    editHandler={editHandler}
+                    deleteHandler={deleteHandler}
+                    editInputHandler={editInputHandler}
+                    editCancelHandler={editCancelHandler}
+                    editSaveHandler={editSaveHandler}
+                    copyHandler={copyHandler}
+                  />
+                );
+              })}
             </div>
           </div>
         </Col>

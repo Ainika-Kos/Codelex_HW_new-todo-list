@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import '../../App.css';
 
 export type TaskType = {
+  id: string,
   name: string,
   finished: boolean,
   edit: boolean,
@@ -10,23 +11,22 @@ export type TaskType = {
 
 
 export type Props = TaskType & {
-  index: number,
-  finishedChangeHandler: (index: number) => void,
-  editHandler: (index: number) => void,
-  deleteHandler: (index: number) => void,
+  finishedChangeHandler: (id: string) => void,
+  editHandler: (id: string) => void,
+  deleteHandler: (id: string) => void,
   editInputHandler: (e: React.ChangeEvent<HTMLInputElement>, 
-    index: number) => void,
-  editCancelHandler: (index: number) => void,
-  editSaveHandler: (index: number) => void,
-  copyHandler: (index: number) => void,
+    id: string) => void,
+  editCancelHandler: (id: string) => void,
+  editSaveHandler: (id: string) => void,
+  copyHandler: (id: string) => void,
 };
 
 export const Task: FC<Props> = ({
+  id,
   name,
   finished,
   edit,
   editValue,
-  index,
   finishedChangeHandler,
   editHandler,
   deleteHandler,
@@ -44,18 +44,18 @@ export const Task: FC<Props> = ({
             type="checkbox"
             className="todo-app__checkbox"
             checked={finished}
-            onChange={() => finishedChangeHandler(index)}
-            id={`${index}`}
+            onChange={() => finishedChangeHandler(id)}
+            id={`${id}`}
           />
           <label
-            htmlFor={`${index}`}
+            htmlFor={`${id}`}
             className={`todo-app__text ${finished && 'todo-app__text--finished'}`}
           >
             {name}
           </label>
-          <button type="button" className="button-actions button-actions--secondary" onClick={() => editHandler(index)}>Edit</button>
-          <button type="button" className="button-actions button-actions--secondary" onClick={() => deleteHandler(index)}>Delete</button>
-          <button type="button" className="button-actions button-actions--secondary" onClick={() => copyHandler(index)}>Copy</button>
+          <button type="button" className="button-actions button-actions--secondary" onClick={() => editHandler(id)}>Edit</button>
+          <button type="button" className="button-actions button-actions--secondary" onClick={() => deleteHandler(id)}>Delete</button>
+          <button type="button" className="button-actions button-actions--secondary" onClick={() => copyHandler(id)}>Copy</button>
         </div>) : (
           <div className="todo-app__task__actions">
             <div>
@@ -63,10 +63,10 @@ export const Task: FC<Props> = ({
                 type="text"
                 className="todo-app__task-form todo-app__task--edit"
                 value={editValue}
-                onChange={(e) => editInputHandler(e, index)}
+                onChange={(e) => editInputHandler(e, id)}
               />
-              <button type="button" className="button-actions button-actions--secondary" onClick={() => editSaveHandler(index)}>Save</button>
-              <button type="button" className="button-actions button-actions--secondary" onClick={() => editCancelHandler(index)}>Cancel</button>
+              <button type="button" className="button-actions button-actions--secondary" onClick={() => editSaveHandler(id)}>Save</button>
+              <button type="button" className="button-actions button-actions--secondary" onClick={() => editCancelHandler(id)}>Cancel</button>
             </div>
           </div>
       )}
