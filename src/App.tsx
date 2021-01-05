@@ -4,15 +4,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { Task, TaskType } from './components/task/task';
 
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-// type KeysToChange = {
-//   name?: string;
-//   finished?: boolean;
-//   edit?: boolean;
-//   editValue?: string;
-// };
-
 const changeArrProperties = <T extends {[key: string]: unknown}> (
   arr: { [key: string]: unknown }[],
   index: number,
@@ -26,8 +17,6 @@ const changeArrProperties = <T extends {[key: string]: unknown}> (
 
   return newArr;
 };
-
-// type TaskToShow = 'all' | 'done' | 'todo';
 
 const TodoApp = () => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
@@ -133,16 +122,6 @@ const TodoApp = () => {
             <div className="header">
               <h2>Your todo list</h2>
               <h3>You have {tasks.length ? tasks.length : 'no'} tasks in total</h3>
-              {/* <select
-                value={showTasks}
-                onChange={(e) => {
-                  setShowTasks(e.target.value as TaskToShow);
-                }}
-              >
-                <option value="all">All</option>
-                <option value="done">Done</option>
-                <option value="todo">Active</option>
-              </select> */}
               <div>
                 <button type="button" onClick={() => setShowTasks('all')}>All tasks</button>
                 <button type="button" onClick={() => setShowTasks('todo')}>Active tasks</button>
